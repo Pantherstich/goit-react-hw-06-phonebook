@@ -1,13 +1,18 @@
 import { Button, ContForm, Input, Label } from './ContactForm.styled';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
+import { addContactAction } from '../../redux/contactSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from '../../redux/selectors';
 
-export const ContactForm = ({ addContact }) => {
+export const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const [id, setId] = useState('');
-  let nameInputId = nanoid();
-  let numberInputId = nanoid();
+  // const [id, setId] = useState('');
+  // let nameInputId = nanoid();
+  // let numberInputId = nanoid();
 
   const onChangeFilter = event => {
     const { name, value } = event.currentTarget;
@@ -20,42 +25,56 @@ export const ContactForm = ({ addContact }) => {
       } else if (name === 'number') {
         setNumber(value);
       }
-      setId(nanoid());
     }
   };
   const handleSubmit = event => {
     event.preventDefault();
-    addContact({ name, number, id });
-    reset();
-  };
+    const newContact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+    const isExist = contacts.find(
+      contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
+    );
 
-  const reset = () => {
+    if (isExist) {
+      alert(`${newContact.name} is contacts.`);
+    } else {
+      dispatch(addContactAction(newContact));
+    }
     setName('');
     setNumber('');
-    nameInputId = nanoid();
   };
+  //   addContact({ name, number, id });
+  //   reset();
+  // };
+
+  // const reset = () => {
+  //   setName('');
+  //   setNumber('');
+  //   nameInputId = nanoid();
+  // };
 
   return (
     <ContForm onSubmit={handleSubmit}>
-      <Label htmlFor={nameInputId}>
+      <Label>
         Name
         <Input
           type="text"
           name="name"
           value={name}
           onChange={onChangeFilter}
-          id={nameInputId}
           required
         />
       </Label>
-      <Label htmlFor={numberInputId}>
+      <Label>
         Number
         <Input
           type="tel"
           name="number"
           value={number}
           onChange={onChangeFilter}
-          id={numberInputId}
           required
         />
       </Label>
