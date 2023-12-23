@@ -10,9 +10,6 @@ export const ContactForm = () => {
   const contacts = useSelector(getContacts);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  // const [id, setId] = useState('');
-  // let nameInputId = nanoid();
-  // let numberInputId = nanoid();
 
   const onChangeFilter = event => {
     const { name, value } = event.currentTarget;
@@ -46,15 +43,6 @@ export const ContactForm = () => {
     setName('');
     setNumber('');
   };
-  //   addContact({ name, number, id });
-  //   reset();
-  // };
-
-  // const reset = () => {
-  //   setName('');
-  //   setNumber('');
-  //   nameInputId = nanoid();
-  // };
 
   return (
     <ContForm onSubmit={handleSubmit}>
